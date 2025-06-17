@@ -260,4 +260,49 @@ body.dark-mode .card {
     font-size: 0.95rem;
   }
 }
+@media (max-width: 600px) {
+  body {
+    padding: 1rem;
+  }
+
+  .container {
+    width: 100%;
+    padding: 1.5rem 1rem;
+    box-sizing: border-box;
+    border-radius: 12px;
+  }
+
+  .input-group {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .input-group input,
+  .input-group button {
+    width: 100%;
+    font-size: 1rem;
+    padding: 0.8rem;
+    box-sizing: border-box;
+  }
+
+  .card {
+    padding: 1.5rem 1rem;
+  }
+
+  #toggleThemeBtn {
+    display: inline-block;
+    margin-bottom: 1rem;
+    background-color: #444;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 25px;
+    font-size: 0.9rem;
+    cursor: pointer;
+  }
+
+  #toggleThemeBtn:hover {
+    background-color: #666;
+  }
+}
 
