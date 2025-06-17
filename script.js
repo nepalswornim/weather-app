@@ -19,16 +19,13 @@ window.onload = () => {
 
 // Get Weather Function
 async function getWeather() {
-  const oldNewsBox = document.getElementById("newsBox");
-  if (oldNewsBox) oldNewsBox.remove();
-
   const city = cityInput.value.trim();
   if (!city) return;
 
   localStorage.setItem("lastCity", city);
 
   try {
-    const apiKey = "670bf1ca8ae119a31433dc91fdbd8362"; // OpenWeatherMap API
+    const apiKey = "670bf1ca8ae119a31433dc91fdbd8362";
     const res = await fetch(
       `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`
     );
@@ -42,7 +39,7 @@ async function getWeather() {
     latestWeatherData = data;
 
     // Fetch news by country code
-    const countryCode = data.sys.country;
+    const countryCode = data.sys.country.toLowerCase(); // NewsData.io uses lowercase country codes
     fetchNews(countryCode);
 
     document.getElementById("cityName").textContent = data.name;
@@ -67,7 +64,7 @@ async function getWeather() {
   }
 }
 
-// Ask AI Function
+// AI Response Function
 async function askAI() {
   const question = questionInput.value.trim();
   const city = cityInput.value.trim();
@@ -78,7 +75,8 @@ async function askAI() {
   loading.style.display = "block";
 
   try {
-    const answer = getMockAIResponse(question, latestWeatherData); // Your mock AI
+    // Mock AI logic
+    const answer = getMockAIResponse(question, latestWeatherData);
     aiAdvice.textContent = answer;
   } catch (err) {
     aiError.textContent = "⚠️ Something went wrong with AI.";
@@ -88,18 +86,7 @@ async function askAI() {
   }
 }
 
-// Mock AI response generator
-function getMockAIResponse(question, data) {
-  const temp = data.main.temp;
-  if (question.toLowerCase().includes("umbrella")) {
-    return data.weather[0].main.toLowerCase().includes("rain")
-      ? "☔ Yes, carry one!"
-      : "🌤️ No rain expected today.";
-  }
-  return `Based on current weather in ${data.name}, it's ${temp.toFixed(1)}°C. Plan accordingly!`;
-}
-
-// Fallback Advice
+// Fallback AI logic
 function getFallbackAdvice(data) {
   const temp = data.main.temp;
   const humidity = data.main.humidity;
@@ -112,16 +99,17 @@ function getFallbackAdvice(data) {
   return `It's a decent day. ${data.weather[0].description}, ${temp.toFixed(1)}°C, ${humidity}% humidity.`;
 }
 
-// Dark Mode Toggle
+// Dark mode toggle
 const themeToggle = document.getElementById("themeToggle");
 themeToggle.addEventListener("click", () => {
   document.body.classList.toggle("dark-mode");
+
   const isDark = document.body.classList.contains("dark-mode");
   localStorage.setItem("darkMode", isDark ? "enabled" : "disabled");
+
   themeToggle.textContent = isDark ? "🌚 Toggle Light Mode" : "🌞 Toggle Dark Mode";
 });
 
-// Apply dark mode on load
 window.addEventListener("DOMContentLoaded", () => {
   const darkPref = localStorage.getItem("darkMode");
   if (darkPref === "enabled") {
@@ -130,7 +118,7 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-// Get user's location on load
+// Location Detection on Load
 window.addEventListener("load", () => {
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(async (position) => {
@@ -150,26 +138,27 @@ window.addEventListener("load", () => {
   }
 });
 
-// 📰 Fetch News by Country Code
+// 📰 Fetch News by Country using NewsData.io
 async function fetchNews(countryCode) {
-  const apiKey = "157fc7c9ae11b357b0d8e37374dc970a"; // GNews API
-
-  const oldNewsBox = document.getElementById("newsBox");
-  if (oldNewsBox) oldNewsBox.remove();
-
+  const apiKey = "pub_cda539826f694c2aaa07620fef3efc1d"; // Replace with your NewsData.io API key
   try {
-    const res = await fetch(`https://gnews.io/api/v4/top-headlines?lang=en&country=${countryCode}&max=3&token=${apiKey}`);
-
+    const res = await fetch(`https://newsdata.io/api/1/news?apikey=${apiKey}&country=${countryCode}&language=en&category=top`);
     const data = await res.json();
+
+    // Remove previous news
+    const oldNewsBox = document.getElementById("newsBox");
+    if (oldNewsBox) oldNewsBox.remove();
 
     const newsBox = document.createElement("div");
     newsBox.className = "card";
     newsBox.id = "newsBox";
-    newsBox.innerHTML = `<h3>📰 Top News in ${countryCode}</h3>`;
+    newsBox.innerHTML = `<h3>📰 Top News in ${countryCode.toUpperCase()}</h3>`;
 
-    if (data.articles && data.articles.length > 0) {
-      data.articles.forEach(article => {
-        newsBox.innerHTML += `<p><a href="${article.url}" target="_blank">${article.title}</a></p>`;
+    if (data.results && data.results.length > 0) {
+      data.results.slice(0, 3).forEach(article => {
+        newsBox.innerHTML += `
+          <p><a href="${article.link}" target="_blank">${article.title}</a></p>
+        `;
       });
     } else {
       newsBox.innerHTML += "<p>No local news found.</p>";
@@ -178,15 +167,9 @@ async function fetchNews(countryCode) {
     document.querySelector(".container").appendChild(newsBox);
   } catch (error) {
     console.error("News fetch error:", error);
-
-    const fallbackBox = document.createElement("div");
-    fallbackBox.className = "card";
-    fallbackBox.id = "newsBox";
-    fallbackBox.innerHTML = `<h3>📰 News Error</h3><p>Could not fetch news for ${countryCode}.</p>`;
-    document.querySelector(".container").appendChild(fallbackBox);
   }
 }
 
-// Attach functions globally
+// Attach for button usage
 window.getWeather = getWeather;
 window.askAI = askAI;
