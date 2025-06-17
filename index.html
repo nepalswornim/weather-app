@@ -14,6 +14,8 @@
     <div class="input-group">
       <input type="text" id="cityInput" placeholder="Enter a city..." />
       <button onclick="getWeather()">Get Weather</button>
+      <button id="toggleDetails" onclick="toggleWeatherDetails()">Toggle Details</button>
+
     </div>
 
     <h2>Ask the Weather AI</h2>
@@ -34,6 +36,8 @@
       <p>🌬️ Wind: <span id="wind"></span> m/s</p>
       <hr />
       <p><strong>🤖 AI Advice:</strong> <span id="aiAdvice"></span></p>
+      <div id="extraDetails"></div>
+
     </div>
   </div>
 

@@ -86,6 +86,28 @@ function getFallbackAdvice(data) {
   return `It's a decent day. ${data.weather[0].description}, ${temp.toFixed(1)}°C, ${humidity}% humidity.`;
 }
 
+let showingDetails = false;
+
+function toggleWeatherDetails() {
+  const weatherCard = document.getElementById("weatherResult");
+  const details = document.getElementById("extraDetails");
+
+  if (!latestWeatherData) return;
+
+  if (showingDetails) {
+    details.innerHTML = "";
+  } else {
+    details.innerHTML = `
+      <p>🤒 Feels Like: ${latestWeatherData.main.feels_like} °C</p>
+      <p>📈 Pressure: ${latestWeatherData.main.pressure} hPa</p>
+      <p>🌫️ Visibility: ${latestWeatherData.visibility / 1000} km</p>
+    `;
+  }
+  showingDetails = !showingDetails;
+}
+
+//Toggle Function
+
 // Attach to window for button onclick use
 window.getWeather = getWeather;
 window.askAI = askAI;

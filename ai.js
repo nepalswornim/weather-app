@@ -1,30 +1,49 @@
-// This is our mock AI function that simulates an "AI response" based on weather data.
 function getMockAIResponse(question, weatherData) {
-  if (!weatherData) {
-    return "Please fetch the weather data first.";
-  }
-  
+  if (!weatherData) return "🤖 Sorry, I don’t have any weather data yet.";
+
+  const q = question.toLowerCase();
+  const desc = weatherData.weather[0].description.toLowerCase();
   const temp = weatherData.main.temp;
-  const condition = weatherData.weather[0].description;
-  const lowerQuestion = question.toLowerCase();
-  let advice = "";
-  
-  if (lowerQuestion.includes("rain")) {
-    advice = (weatherData.main.humidity > 80 || condition.includes("rain"))
-      ? "Yes, there’s a high chance of rain. Bring an umbrella!"
-      : "It doesn't look like it'll rain much.";
-  } else if (lowerQuestion.includes("cold")) {
-    advice = (temp < 10)
-      ? "It is quite cold. You should definitely wear a jacket."
-      : "It's not too cold today.";
-  } else if (lowerQuestion.includes("hot")) {
-    advice = (temp > 30)
-      ? "It's really hot. Stay hydrated!"
-      : "It's a moderate temperature today.";
-  } else {
-    // General fallback reply.
-    advice = `Based on the current weather, it seems ${condition} with a temperature of ${temp.toFixed(1)}°C.`;
+  const humidity = weatherData.main.humidity;
+  const wind = weatherData.wind.speed;
+
+  // Define logic for each keyword type
+  if (q.includes("rain")) {
+    return desc.includes("rain") || desc.includes("drizzle")
+      ? "🌧️ Looks rainy. Bring an umbrella!"
+      : "☀️ No rain expected at the moment.";
   }
-  
-  return advice;
+
+  if (q.includes("snow")) {
+    return desc.includes("snow")
+      ? "❄️ It's snowing or expected to snow. Stay warm!"
+      : "☃️ No snow in the forecast.";
+  }
+
+  if (q.includes("hail")) {
+    return desc.includes("hail")
+      ? "🌨️ Hail is possible. Watch out for falling ice!"
+      : "🌤️ No hail detected in the forecast.";
+  }
+
+  if (q.includes("hot") || q.includes("cold") || q.includes("temperature")) {
+    if (temp > 30) return "🔥 It's really hot today. Stay cool!";
+    if (temp < 10) return "🧊 It's freezing cold. Bundle up!";
+    return `🌤️ The temperature is mild around ${temp.toFixed(1)}°C.`;
+  }
+
+  if (q.includes("humid") || q.includes("humidity")) {
+    return humidity > 70
+      ? "💦 It's quite humid today."
+      : "🌬️ The air doesn't feel too humid.";
+  }
+
+  if (q.includes("wind") || q.includes("windy")) {
+    return wind > 15
+      ? "💨 It's very windy. Hold onto your hat!"
+      : "🍃 Just a gentle breeze out there.";
+  }
+
+  // Fallback if none of the weather keywords are matched
+  return "🤖 Your question doesn't seem related to weather. Try asking about rain, snow, temperature, wind, etc.";
 }
