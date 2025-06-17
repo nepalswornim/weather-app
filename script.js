@@ -8,6 +8,17 @@ const weatherCard = document.getElementById("weatherResult");
 
 let latestWeatherData = null;
 
+// 🌍 Country backgrounds
+const countryBackgrounds = {
+  AU: "https://images.unsplash.com/photo-1528072164453-f4e8ef0d475a?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8c3lkbmV5fGVufDB8fDB8fHww?auto=format&fit=crop&w=1500&q=80", // Australia
+  NP: "https://www.andbeyond.com/wp-content/uploads/sites/5/nepal-village.jpg?auto=format&fit=crop&w=1500&q=80", // Nepal
+  US: "https://wallpapersok.com/images/hd/new-york-hd-harbor-and-skyscrapers-5lcoe5nyg04r0tl7.jpg?auto=format&fit=crop&w=1500&q=80", // USA
+  FR: "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=1500&q=80", // France
+  JP: "https://images3.alphacoders.com/979/97969.jpg?auto=format&fit=crop&w=1500&q=80", // Japan
+  IN: "https://images.unsplash.com/photo-1524492412937-b28074a5d7da?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aW5kaWF8ZW58MHx8MHx8fDA%3D?auto=format&fit=crop&w=1500&q=80", // India
+  GB: "https://images.unsplash.com/photo-1533929736458-ca588d08c8be?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8bG9uZG9ufGVufDB8fDB8fHww?auto=format&fit=crop&w=1500&q=80", // UK
+};
+
 // Load last city from localStorage on page load
 window.onload = () => {
   const lastCity = localStorage.getItem("lastCity");
@@ -38,10 +49,27 @@ async function getWeather() {
 
     latestWeatherData = data;
 
-    // Fetch news by country code
-    const countryCode = data.sys.country.toLowerCase(); // NewsData.io uses lowercase country codes
-    fetchNews(countryCode);
+    // 🌍 Set background image
+    const countryCode = data.sys.country;
+    const bgUrl = countryBackgrounds[countryCode];
+    if (bgUrl) {
+      document.body.style.backgroundImage = `url('${bgUrl}')`;
+      document.body.style.backgroundSize = "cover";
+      document.body.style.backgroundPosition = "center";
+      document.body.style.backgroundRepeat = "no-repeat";
+      document.body.style.transition = "background-image 0.5s ease-in-out";
+    } else {
+      document.body.style.background = document.body.classList.contains("dark-mode")
+        ? "linear-gradient(to right, #1a1a1a, #121212)"
+        : "linear-gradient(to right, #e0f7fa, #fff)";
+      document.body.style.backgroundImage = "none";
+    }
 
+    // 🌐 Fetch news
+    const countryCodeLower = data.sys.country.toLowerCase();
+    fetchNews(countryCodeLower);
+
+    // 🌡️ Weather display
     document.getElementById("cityName").textContent = data.name;
     document.getElementById("temp").textContent = data.main.temp.toFixed(1);
     document.getElementById("description").textContent = data.weather[0].description;
