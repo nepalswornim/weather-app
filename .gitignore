@@ -1,0 +1,29 @@
+
+---
+
+### ⚙️ `.gitignore`
+
+```gitignore
+# Node
+node_modules/
+.env
+
+# API Keys (just in case)
+*.env
+*.key
+
+# VSCode
+.vscode/
+
+# macOS & OS junk
+.DS_Store
+Thumbs.db
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Optional builds
+dist/
+build/
