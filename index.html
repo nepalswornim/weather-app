@@ -2,11 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
- <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   
   <title>Weather App</title>
-    <link rel="icon" href="https://fav.farm/⛅" />
+  <link rel="icon" href="https://fav.farm/⛅" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -14,12 +13,9 @@
     <h1>🌤️ Weather App</h1>
     <button id="themeToggle">🌞 Toggle Dark Mode</button>
 
-
     <div class="input-group">
       <input type="text" id="cityInput" placeholder="Enter a city..." />
       <button onclick="getWeather()">Get Weather</button>
-     
-
     </div>
 
     <h2>Ask the Weather AI</h2>
@@ -33,22 +29,22 @@
 
     <div id="weatherResult" class="card hidden">
       <h3 id="cityName"></h3>
-      <img id="weatherIcon" alt="Weather icon"/>
+      <img id="weatherIcon" alt="Weather icon" />
       <p>🌡️ Temp: <span id="temp"></span>°C</p>
       <p>⛅ Weather: <span id="description"></span></p>
       <p>💧 Humidity: <span id="humidity"></span>%</p>
       <p>🌬️ Wind: <span id="wind"></span> m/s</p>
+      <p>🌅 Sunrise: <span id="sunrise"></span></p>
+      <p>🌇 Sunset: <span id="sunset"></span></p>
       <hr />
       <p><strong>🤖 AI Advice:</strong> <span id="aiAdvice"></span></p>
-   
-<p>🌅 Sunrise: <span id="sunrise"></span></p>
-<p>🌇 Sunset: <span id="sunset"></span></p>
     </div>
+
+    <!-- News section will be appended dynamically -->
   </div>
 
-  <!-- Load our main JS files -->
-   <script src="ai.js"></script>
+  <!-- JS scripts -->
+  <script src="ai.js"></script>
   <script src="script.js"></script>
-  
 </body>
 </html>
