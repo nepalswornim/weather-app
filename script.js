@@ -47,6 +47,13 @@ async function getWeather() {
 
     aiAdvice.textContent = getFallbackAdvice(data);
     weatherCard.classList.remove("hidden");
+    // Convert sunrise/sunset timestamps to local time
+const sunriseTime = new Date(data.sys.sunrise * 1000);
+const sunsetTime = new Date(data.sys.sunset * 1000);
+
+document.getElementById("sunrise").textContent = sunriseTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+document.getElementById("sunset").textContent = sunsetTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
   } catch (error) {
     console.error("Weather fetch error:", error);
     alert("⚠️ Failed to fetch weather data.");
@@ -86,25 +93,25 @@ function getFallbackAdvice(data) {
   return `It's a decent day. ${data.weather[0].description}, ${temp.toFixed(1)}°C, ${humidity}% humidity.`;
 }
 
-let showingDetails = false;
+const themeToggle = document.getElementById("themeToggle");
 
-function toggleWeatherDetails() {
-  const weatherCard = document.getElementById("weatherResult");
-  const details = document.getElementById("extraDetails");
+themeToggle.addEventListener("click", () => {
+  document.body.classList.toggle("dark-mode");
+  
+  const isDark = document.body.classList.contains("dark-mode");
+  localStorage.setItem("darkMode", isDark ? "enabled" : "disabled");
 
-  if (!latestWeatherData) return;
+  themeToggle.textContent = isDark ? "🌚 Toggle Light Mode" : "🌞 Toggle Dark Mode";
+});
 
-  if (showingDetails) {
-    details.innerHTML = "";
-  } else {
-    details.innerHTML = `
-      <p>🤒 Feels Like: ${latestWeatherData.main.feels_like} °C</p>
-      <p>📈 Pressure: ${latestWeatherData.main.pressure} hPa</p>
-      <p>🌫️ Visibility: ${latestWeatherData.visibility / 1000} km</p>
-    `;
+window.addEventListener("DOMContentLoaded", () => {
+  const darkPref = localStorage.getItem("darkMode");
+  if (darkPref === "enabled") {
+    document.body.classList.add("dark-mode");
+    document.getElementById("themeToggle").textContent = "🌚 Toggle Light Mode";
   }
-  showingDetails = !showingDetails;
-}
+});
+
 
 //Toggle Function
 

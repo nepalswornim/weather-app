@@ -10,11 +10,13 @@
 <body>
   <div class="container">
     <h1>🌤️ Weather App</h1>
+    <button id="themeToggle">🌞 Toggle Dark Mode</button>
+
 
     <div class="input-group">
       <input type="text" id="cityInput" placeholder="Enter a city..." />
       <button onclick="getWeather()">Get Weather</button>
-      <button id="toggleDetails" onclick="toggleWeatherDetails()">Toggle Details</button>
+     
 
     </div>
 
@@ -36,8 +38,9 @@
       <p>🌬️ Wind: <span id="wind"></span> m/s</p>
       <hr />
       <p><strong>🤖 AI Advice:</strong> <span id="aiAdvice"></span></p>
-      <div id="extraDetails"></div>
-
+   
+<p>🌅 Sunrise: <span id="sunrise"></span></p>
+<p>🌇 Sunset: <span id="sunset"></span></p>
     </div>
   </div>
 
