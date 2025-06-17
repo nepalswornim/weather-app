@@ -1,57 +1,83 @@
+const cityInput = document.getElementById("cityInput");
+const questionInput = document.getElementById("questionInput");
+const aiError = document.getElementById("aiError");
+const aiAdvice = document.getElementById("aiAdvice");
+const loading = document.getElementById("loading");
+const weatherCard = document.getElementById("weatherResult");
 
+// Global variable to store weather data so the AI can use it
+let latestWeatherData = null;
+
+// Load the last searched city from localStorage, and fetch its weather
+window.onload = () => {
+  const lastCity = localStorage.getItem("lastCity");
+  if (lastCity) {
+    cityInput.value = lastCity;
+    getWeather();
+  }
+};
 
 async function getWeather() {
-  const city = document.getElementById("cityInput").value;
-  const apiKey = "670bf1ca8ae119a31433dc91fdbd8362";
-  const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+  const city = cityInput.value.trim();
+  if (!city) return;
 
-  const resultBox = document.getElementById("weatherResult");
-  resultBox.innerHTML = `
-    <div class="spinner-border text-primary" role="status">
-      <span class="visually-hidden">Loading...</span>
-    </div>`;
-  resultBox.style.display = "block";
+  localStorage.setItem("lastCity", city);
 
   try {
-    const res = await fetch(url);
-    if (!res.ok) throw new Error("City not found");
-
+    const apiKey = "670bf1ca8ae119a31433dc91fdbd8362"; // OpenWeatherMap API key
+    const res = await fetch(
+      `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`
+    );
     const data = await res.json();
 
-    const iconCode = data.weather[0].icon;
-    const iconUrl = `http://openweathermap.org/img/wn/${iconCode}@2x.png`;
+    // Store the data globally for our AI functions
+    latestWeatherData = data;
 
-   const summary = generateSummary(data);
+    document.getElementById("cityName").textContent = data.name;
+    document.getElementById("temp").textContent = data.main.temp.toFixed(2);
+    document.getElementById("description").textContent = data.weather[0].description;
+    document.getElementById("humidity").textContent = data.main.humidity;
+    document.getElementById("wind").textContent = data.wind.speed;
+    document.getElementById("weatherIcon").src = `https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`;
 
-resultBox.innerHTML = `
-  <h2>${data.name}</h2>
-  <img src="${iconUrl}" alt="Weather icon">
-  <p>🌡️ Temp: ${data.main.temp} °C</p>
-  <p>🌥️ Weather: ${data.weather[0].description}</p>
-  <p>💧 Humidity: ${data.main.humidity}%</p>
-  <p>🌬️ Wind: ${data.wind.speed} m/s</p>
-  <hr>
-  <p><strong>🤖 AI Advice:</strong> ${summary}</p>
-`;
+    // Use the fallback AI suggestion as an initial display
+    aiAdvice.textContent = getFallbackAdvice(data);
 
-  } catch (err) {
-    resultBox.innerHTML = `<p class="text-danger">❌ ${err.message}</p>`;
+    weatherCard.classList.remove("hidden");
+  } catch (error) {
+    alert("Failed to fetch weather data.");
   }
 }
-function generateSummary(data) {
+
+// Updated askAI() that uses the mock AI (defined in ai.js)
+async function askAI() {
+  const question = questionInput.value.trim();
+  const city = cityInput.value.trim();
+  if (!question || !city) return;
+  
+  aiError.textContent = "";
+  loading.style.display = "block";
+  aiAdvice.textContent = "";
+  
+  // Use our mock AI function from ai.js instead of fetching a paid API
+  const answer = getMockAIResponse(question, latestWeatherData);
+  aiAdvice.textContent = answer;
+  loading.style.display = "none";
+}
+
+// A simple fallback suggestion for weather (used when weather data is present)
+function getFallbackAdvice(data) {
   const temp = data.main.temp;
-  const condition = data.weather[0].main.toLowerCase();
   const humidity = data.main.humidity;
+  const wind = data.wind.speed;
 
-  let advice = "It's a decent day.";
-  if (condition.includes("rain") || humidity > 80) {
-    advice = "Carry an umbrella just in case!";
-  } else if (temp > 30) {
-    advice = "Stay hydrated, it's hot out.";
-  } else if (temp < 5) {
-    advice = "Bundle up, it's chilly.";
-  }
-
-  return `${advice} Currently ${condition} with ${temp}°C and ${humidity}% humidity.`;
+  if (humidity > 80) return "💧 Might feel muggy today!";
+  if (wind > 10) return "💨 Breezy day — wear a jacket!";
+  if (temp > 30) return "🔥 Stay hydrated, it's hot!";
+  if (temp < 10) return "🧊 Dress warmly, it's chilly!";
+  return `It's a decent day. Currently ${data.weather[0].description} with ${temp.toFixed(2)}°C and ${humidity}% humidity.`;
 }
 
+// Expose functions globally for HTML onclick handlers (if needed)
+window.getWeather = getWeather;
+window.askAI = askAI;

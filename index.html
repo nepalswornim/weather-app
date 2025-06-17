@@ -2,29 +2,42 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Weather App</title>
-  <!-- Bootstrap 5 -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
 </head>
-<body class="bg-light text-center py-5">
-
+<body>
   <div class="container">
-   
-    <h1 class="mb-4">🌦️ Weather App</h1>
+    <h1>🌤️ Weather App</h1>
 
+    <div class="input-group">
+      <input type="text" id="cityInput" placeholder="Enter a city..." />
+      <button onclick="getWeather()">Get Weather</button>
+    </div>
 
-    <input id="cityInput" type="text" class="form-control mb-3" placeholder="Enter a city name" />
+    <h2>Ask the Weather AI</h2>
+    <div class="input-group">
+      <input type="text" id="questionInput" placeholder="Will it rain tomorrow?" />
+      <button onclick="askAI()">Ask</button>
+    </div>
 
-    <button onclick="getWeather()" class="btn btn-primary mb-4">Get Weather</button>
+    <p id="loading" class="loading">🤔 Thinking...</p>
+    <p id="aiError" class="error"></p>
 
-    <div id="weatherResult" class="p-4 border rounded bg-white shadow-sm" style="display:none;">
-      <h2 id="cityName"></h2>
-      <p id="temp"></p>
-      <p id="desc"></p>
+    <div id="weatherResult" class="card hidden">
+      <h3 id="cityName"></h3>
+      <img id="weatherIcon" alt="Weather icon"/>
+      <p>🌡️ Temp: <span id="temp"></span>°C</p>
+      <p>⛅ Weather: <span id="description"></span></p>
+      <p>💧 Humidity: <span id="humidity"></span>%</p>
+      <p>🌬️ Wind: <span id="wind"></span> m/s</p>
+      <hr />
+      <p><strong>🤖 AI Advice:</strong> <span id="aiAdvice"></span></p>
     </div>
   </div>
 
+  <!-- Load our main JS files -->
   <script src="script.js"></script>
+  <script src="ai.js"></script>
 </body>
 </html>
