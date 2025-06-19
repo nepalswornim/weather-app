@@ -2,8 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Weather App</title>
   <link rel="icon" href="https://fav.farm/⛅" />
   <link rel="stylesheet" href="styles.css" />
@@ -20,7 +19,7 @@
 
     <h2>Ask the Weather AI</h2>
     <div class="input-group">
-      <input type="text" id="questionInput" placeholder="Will it rain tomorrow?" />
+      <input type="text" id="questionInput" placeholder="Will it rain tomorrow? (Rain/Hot/Cold/Humidity/Wind)" />
       <button onclick="askAI()">Ask</button>
     </div>
 
@@ -39,12 +38,8 @@
       <hr />
       <p><strong>🤖 AI Advice:</strong> <span id="aiAdvice"></span></p>
     </div>
-
-    <!-- News section will be appended dynamically -->
   </div>
 
-  <!-- JS scripts -->
-   
   <script src="ai.js"></script>
   <script src="script.js"></script>
 </body>
